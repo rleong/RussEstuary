@@ -9,6 +9,7 @@ import framework.KeyInput;
 import framework.ObjectId;
 import object.Clock;
 import object.Critter;
+import object.Habitat;
 import object.RecycleBin;
 import object.Runoff;
 import object.Trash;
@@ -39,6 +40,7 @@ public class Game extends Canvas implements Runnable{
 		handler.creatSurface();
 		handler.addObject(trashBin);
 		handler.addObject(recyclebin);
+		handler.addObject(new Habitat(250, 436, ObjectId.habitat,handler));
 		
 		handler.addObject(new Runoff(0,500-32,ObjectId.runOff));
 		handler.addObject(new Runoff(50,500-32,ObjectId.runOff));

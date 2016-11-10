@@ -83,9 +83,7 @@ public class Recycle extends GameObject {
 			if (temp.getId() == ObjectId.landSurface) {
 				if (getBoundsBottom().intersects(temp.getBounds())) {
 					setY(temp.getY() - 32);
-
-					setVelY(0);
-					falling = false;
+					fallvalue=0;
 				}
 			}
 		}

@@ -35,7 +35,7 @@ public class Clock extends GameObject{
 			timer1 = 0;
 		}
 		timer1 ++;
-		System.out.println(timer1 + ", "+ countdown1);
+		//System.out.println(timer1 + ", "+ countdown1);
 		
 	}
 

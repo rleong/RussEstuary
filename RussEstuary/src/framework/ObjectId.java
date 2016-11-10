@@ -33,5 +33,6 @@ public enum ObjectId {
 	tree(),
 	
 	//
-	clock();
+	clock(),
+	habitat();
 }
