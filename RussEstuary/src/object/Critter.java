@@ -96,6 +96,16 @@ public class Critter extends GameObject {
 				}
 				
 			}
+			if(temp.getId()==ObjectId.recycle){
+				Recycle recycle = (Recycle)temp;
+				if(recycle.canAttack){
+					recycle.health-=damage;
+				}
+				if(recycle.health<=0){
+					recycle.dead();
+				}
+				
+			}
 		}
 	}
 	
@@ -142,6 +152,17 @@ public class Critter extends GameObject {
 				}
 				if(!getBounds().intersects(temp.getBounds())){
 					trash.canAttack=false;
+					//System.out.println("out of range");
+				}
+			}
+			if(temp.getId() == ObjectId.recycle){
+				Recycle recycle = (Recycle)temp;
+				if(getBounds().intersects(temp.getBounds())){
+					recycle.canAttack=true;
+					//System.out.println("in range");
+				}
+				if(!getBounds().intersects(temp.getBounds())){
+					recycle.canAttack=false;
 					//System.out.println("out of range");
 				}
 			}

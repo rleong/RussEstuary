@@ -29,6 +29,7 @@ public enum ObjectId {
 	
 	//
 	trashBin(),
+	recycleBin(),
 	tree(),
 	
 	//

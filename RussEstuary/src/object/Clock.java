@@ -1,4 +1,4 @@
-package control;
+package object;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -8,9 +8,6 @@ import window.Handler;
 
 import framework.GameObject;
 import framework.ObjectId;
-import object.Trash;
-import object.TrashBin;
-import object.Tree;
 
 public class Clock extends GameObject{
 	
@@ -19,35 +16,22 @@ public class Clock extends GameObject{
 	int countdown1 = 0;
 	int amount = 0;
 	Random rand = new Random();
+	TrashBin trashbin;
+	RecycleBin recyclebin;
 
-	public Clock(double x, double y, ObjectId id, Handler handler) {
+	public Clock(double x, double y, ObjectId id, Handler handler, TrashBin trashbin, RecycleBin recyclebin) {
 		super(x, y, id);
 		this.handler = handler;
-		
+		this.trashbin=trashbin;
+		this.recyclebin=recyclebin;
 	}
 
 	@Override
 	public void tick(LinkedList<GameObject> object) {
 		if(timer1==countdown1){
 			countdown1 = rand.nextInt(500);
-			amount = rand.nextInt(2);
-			switch(amount){
-			case 0:
-				spawnTrash();
-				break;
-			case 1:
-				spawnTrash();
-				spawnTrash();
-				break;
-			case 2:
-				spawnTrash();
-				spawnTrash();
-				spawnTrash();
-				break;
-			default:
-				spawnTrash();
-				break;
-			}
+			spawnTrash();
+			spawnRecycle();
 			timer1 = 0;
 		}
 		timer1 ++;
@@ -67,13 +51,18 @@ public class Clock extends GameObject{
 		return null;
 	}
 	
-	public void countDown(){
-		
+	public void spawnTrash(){
+		amount = rand.nextInt(3);
+		for(int i = 0; i < amount; i++){
+			handler.addObject(new Trash(rand.nextInt(600), rand.nextInt(200), ObjectId.trash,trashbin,handler));
+		}
 	}
 	
-	public void spawnTrash(){
-		TrashBin trashBin=new TrashBin(550, 550, ObjectId.trashBin,handler);
-		handler.addObject(new Trash(rand.nextInt(600), rand.nextInt(200), ObjectId.trash,trashBin,handler));
+	public void spawnRecycle(){
+		amount = rand.nextInt(3);
+		for(int i = 0; i < amount; i++){
+			handler.addObject(new Recycle(rand.nextInt(600), rand.nextInt(200), ObjectId.recycle,recyclebin,handler));
+		}
 	}
 
 }
