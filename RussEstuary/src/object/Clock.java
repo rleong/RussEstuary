@@ -42,7 +42,8 @@ public class Clock extends GameObject{
 	@Override
 	public void render(Graphics g) {
 		// TODO Auto-generated method stub
-		
+//		String test = countdown1 + "";
+//		g.drawString(test, (int)x, (int)y+20);
 	}
 
 	@Override

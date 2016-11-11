@@ -34,5 +34,6 @@ public enum ObjectId {
 	
 	//
 	clock(),
+	boat(),
 	habitat();
 }

@@ -7,6 +7,7 @@ import java.awt.image.BufferStrategy;
 
 import framework.KeyInput;
 import framework.ObjectId;
+import object.Boat;
 import object.Clock;
 import object.Critter;
 import object.Habitat;
@@ -40,12 +41,13 @@ public class Game extends Canvas implements Runnable{
 		handler.creatSurface();
 		handler.addObject(trashBin);
 		handler.addObject(recyclebin);
-		handler.addObject(new Habitat(250, 436, ObjectId.habitat,handler));
+		handler.addObject(new Habitat(110, 436, ObjectId.habitat,handler));
+		handler.addObject(new Boat(0, 50, ObjectId.boat,600,handler,trashBin, recyclebin));
 		
 		handler.addObject(new Runoff(0,500-32,ObjectId.runOff));
 		handler.addObject(new Runoff(50,500-32,ObjectId.runOff));
 		handler.addObject(new Runoff(-50,500-32,ObjectId.runOff));
-		handler.addObject(new Clock(1,1,ObjectId.clock,handler,trashBin,recyclebin));
+		//handler.addObject(new Clock(1,1,ObjectId.clock,handler,trashBin,recyclebin));
 		
 		handler.addObject(new Critter(250,250,ObjectId.critter, false, false,handler));
 		this.addKeyListener(new KeyInput(handler));
