@@ -9,6 +9,7 @@ import framework.KeyInput;
 import framework.ObjectId;
 import object.Boat;
 import object.Clock;
+import object.CompostCounter;
 import object.Critter;
 import object.Habitat;
 import object.RecycleBin;
@@ -33,6 +34,7 @@ public class Game extends Canvas implements Runnable{
 	Handler handler;
 	TrashBin trashBin=new TrashBin(550, 550, ObjectId.trashBin,handler);
 	RecycleBin recyclebin=new RecycleBin(500, 550, ObjectId.recycleBin,handler);
+	CompostCounter counter = new CompostCounter(10,10, ObjectId.compostCounter);
 	
 	 
 	private void init(){
@@ -41,8 +43,9 @@ public class Game extends Canvas implements Runnable{
 		handler.creatSurface();
 		handler.addObject(trashBin);
 		handler.addObject(recyclebin);
-		handler.addObject(new Habitat(110, 436, ObjectId.habitat,handler));
-		handler.addObject(new Boat(0, 50, ObjectId.boat,600,handler,trashBin, recyclebin));
+		handler.addObject(counter);
+		handler.addObject(new Habitat(0, 436, ObjectId.habitat,handler));
+		handler.addObject(new Boat(0, 50, ObjectId.boat,600,handler,trashBin, recyclebin, counter));
 		
 		handler.addObject(new Runoff(0,500-32,ObjectId.runOff));
 		handler.addObject(new Runoff(50,500-32,ObjectId.runOff));

@@ -9,20 +9,19 @@ import framework.GameObject;
 import framework.ObjectId;
 import window.Handler;
 
-public class Recycle extends GameObject {
+public class Compost extends GameObject {
 	int damage = 5;
 	double health = 20;
 	boolean canAttack = false;
 	int fallvalue = 1;
 	private Handler handler;
 	boolean isDead = false;
+	CompostCounter counter;
 
-	RecycleBin recyclebin;
-
-	public Recycle(double x, double y, ObjectId id, RecycleBin recyclebin, Handler handler) {
+	public Compost(double x, double y, ObjectId id, Handler handler, CompostCounter counter) {
 		super(x, y, id);
-		this.recyclebin = recyclebin;
 		this.handler=handler;
+		this.counter = counter;
 	}
 
 	/*
@@ -38,11 +37,9 @@ public class Recycle extends GameObject {
 
 	public void dead() {
 		if (health <= 0) {
-			setVelX((recyclebin.getX() - x) / 50);
-			setVelY(-5);
-
 			canAttack = false;
 			isDead = true;
+			counter.setCount();
 		}
 
 	}
@@ -69,10 +66,12 @@ public class Recycle extends GameObject {
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Color.green);
-		g.fillRect((int) x, (int) y, 32, 32);
-		g.setColor(Color.red);
-		g.fillRect((int) x, (int) y, (int) ((health / 20) * 32), 2);
+		if(!isDead){
+			g.setColor(Color.ORANGE);
+			g.fillRect((int) x, (int) y, 32, 32);
+			g.setColor(Color.red);
+			g.fillRect((int) x, (int) y, (int) ((health / 20) * 32), 2);
+		}
 	}
 
 	@Override

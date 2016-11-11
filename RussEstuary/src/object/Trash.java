@@ -46,6 +46,10 @@ public class Trash extends GameObject {
 		}
 
 	}
+	
+	public boolean checkDeath(){
+		return isDead;
+	}
 
 	@Override
 	public void tick(LinkedList<GameObject> object) {

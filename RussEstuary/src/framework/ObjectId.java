@@ -21,6 +21,8 @@ public enum ObjectId {
 	runOff(),
 	trash(),
 	waterWaste(),
+	compost(),
+	compostCounter(),
 	
 	waves(),
 	

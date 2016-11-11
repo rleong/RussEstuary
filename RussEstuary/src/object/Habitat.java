@@ -42,9 +42,9 @@ public class Habitat extends GameObject{
 			g.setColor(Color.RED);
 		else
 			g.setColor(Color.GRAY);
-		g.fillRect((int) x, (int) y, 400, 64);
+		g.fillRect((int) x, (int) y, 600, 64);
 		g.setColor(Color.red);
-		g.fillRect((int) x, (int) y, (int) ((health / 20) * 400), 2);
+		g.fillRect((int) x, (int) y, (int) ((health / 20) * 600), 2);
 	}
 	
 	private void collision(LinkedList<GameObject> object) {
@@ -66,7 +66,7 @@ public class Habitat extends GameObject{
 
 	@Override
 	public Rectangle getBounds() {
-		return new Rectangle((int)x + 6, (int) y + 26, 400, 64);
+		return new Rectangle((int)x + 6, (int) y + 26, 600, 64);
 	}
 
 }

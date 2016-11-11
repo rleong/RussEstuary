@@ -88,23 +88,36 @@ public class Critter extends GameObject {
 			GameObject temp = object.get(i);
 			if(temp.getId()==ObjectId.trash){
 				Trash trash = (Trash)temp;
-				if(trash.canAttack){
-					trash.health-=damage;
-				}
-				if(trash.health<=0){
-					trash.dead();
-				}
-				
+				if(!trash.checkDeath()){
+					if(trash.canAttack){
+						trash.health-=damage;
+					}
+					if(trash.health<=0){
+						trash.dead();
+					}
+				}				
 			}
 			if(temp.getId()==ObjectId.recycle){
 				Recycle recycle = (Recycle)temp;
-				if(recycle.canAttack){
-					recycle.health-=damage;
-				}
-				if(recycle.health<=0){
-					recycle.dead();
-				}
-				
+				if(!recycle.checkDeath()){
+					if(recycle.canAttack){
+						recycle.health-=damage;
+					}
+					if(recycle.health<=0){
+						recycle.dead();
+					}
+				}				
+			}
+			if(temp.getId()==ObjectId.compost){
+				Compost compost = (Compost)temp;
+				if(!compost.checkDeath()){
+					if(compost.canAttack){
+						compost.health-=damage;
+					}
+					if(compost.health<=0){
+						compost.dead();
+					}
+				}	
 			}
 		}
 	}
@@ -163,6 +176,17 @@ public class Critter extends GameObject {
 				}
 				if(!getBounds().intersects(temp.getBounds())){
 					recycle.canAttack=false;
+					//System.out.println("out of range");
+				}
+			}
+			if(temp.getId() == ObjectId.compost){
+				Compost compost = (Compost)temp;
+				if(getBounds().intersects(temp.getBounds())){
+					compost.canAttack=true;
+					//System.out.println("in range");
+				}
+				if(!getBounds().intersects(temp.getBounds())){
+					compost.canAttack=false;
 					//System.out.println("out of range");
 				}
 			}

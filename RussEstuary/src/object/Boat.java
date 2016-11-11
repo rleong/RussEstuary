@@ -18,6 +18,7 @@ public class Boat extends GameObject{
 	private double initialY = 0;
 	private TrashBin trashBin;
 	private RecycleBin recyclebin;
+	private CompostCounter counter;
 	
 	//Clock
 	int timer1 = 0;
@@ -25,13 +26,14 @@ public class Boat extends GameObject{
 	int amount = 0;
 	Random rand = new Random();
 
-	public Boat(double x, double y, ObjectId id, int width, Handler handler, TrashBin trashBin, RecycleBin recyclebin) {
+	public Boat(double x, double y, ObjectId id, int width, Handler handler, TrashBin trashBin, RecycleBin recyclebin, CompostCounter counter) {
 		super(x, y, id);
 		this.width=width;
 		this.handler=handler;
 		initialY = y;
 		this.trashBin = trashBin;
 		this.recyclebin = recyclebin;
+		this.counter = counter;
 	}
 
 	@Override
@@ -40,6 +42,7 @@ public class Boat extends GameObject{
 			countdown1 = rand.nextInt(500);
 			spawnTrash();
 			spawnRecycle();
+			spawnCompost();
 			timer1 = 0;
 		}
 		timer1 ++;
@@ -80,6 +83,12 @@ public class Boat extends GameObject{
 		for(int i = 0; i < amount; i++){
 			handler.addObject(new Recycle(rand.nextInt((int)x+10)+x, rand.nextInt((int)y+5)+y, ObjectId.recycle,recyclebin,handler));
 		}
+	}
+	
+	public void spawnCompost(){
+		amount = rand.nextInt(10);
+		if(amount%2==0)
+			handler.addObject(new Compost(rand.nextInt((int)x+10)+x, rand.nextInt((int)y+5)+y, ObjectId.compost, handler, counter));
 	}
 
 }
