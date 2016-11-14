@@ -39,17 +39,17 @@ public class Tree extends GameObject {
 	@Override
 	public void render(Graphics g) {
 		g.setColor(Color.green);
-		g.fillRect((int)x, 500-128, 32, 32);
+		g.fillRect((int)x, (int)y-96, 32, 32);
 		g.setColor(Color.darkGray);
-		g.fillRect((int)x, 500-96, 32, 96);
+		g.fillRect((int)x, (int)y-64, 32, 96);
 		g.setColor(Color.red);
-		g.fillRect((int)x, (int)500-128, (int)(hp*32/3), 2);
+		g.fillRect((int)x, (int)y-96, (int)(hp*32/3), 2);
 	}
 
 	@Override
 	public Rectangle getBounds() {
 		
-		return new Rectangle((int)x,(int)500-128,32,128);
+		return new Rectangle((int)x,(int)y-96,32,128);
 	}
 
 }

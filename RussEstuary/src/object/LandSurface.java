@@ -24,15 +24,25 @@ public class LandSurface extends GameObject {
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Color.ORANGE);
-		g.drawRect((int)x, (int)y, 30, 30);
+		if(id==ObjectId.landSurface){
+			g.setColor(Color.ORANGE);
+			g.fillRect((int)x, (int)y, 32, 32);
+		}
+		if(id==ObjectId.seaLevel){
+			g.setColor(Color.CYAN);
+			g.fillRect((int)x, (int)y, 32, 32);
+		}
+		if(id==ObjectId.wall){
+			g.setColor(Color.gray);
+			g.fillRect((int)x, (int)y, 32, 32);
+		}
 		
 	}
 
 	@Override
 	public Rectangle getBounds() {
 		
-		return new Rectangle((int)x, (int)y, 30,30);
+		return new Rectangle((int)x, (int)y, 32,32);
 	}
 
 }

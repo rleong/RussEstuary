@@ -20,7 +20,9 @@ public class Critter extends GameObject {
 	int health1;
 	int health2;
 	int damage;
+	public boolean jump;
 	private Handler handler;
+	public boolean onLand;
 	/*
 	 * Critter constructor
 	 * 
@@ -35,6 +37,7 @@ public class Critter extends GameObject {
 		health1=100;
 		health2=100;
 		this.handler=handler;
+		jump=false;
 	}
 	
 	public void setDamage(){
@@ -130,7 +133,7 @@ public class Critter extends GameObject {
 	}
 	
 	public void planT(){
-		handler.addObject(new Tree(300,100,ObjectId.tree));
+		handler.addObject(new Tree(x,y,ObjectId.tree));
 	}
 
 	@Override
@@ -152,9 +155,24 @@ public class Critter extends GameObject {
 			if(temp.getId() == ObjectId.landSurface){
 				if(getBoundsBottom().intersects(temp.getBounds())){
 					setY(temp.getY()-32);
-					
-					setVelY(0);
 					falling=false;
+					onLand=true;
+					setVelY(0);
+					
+				}
+				else{
+					onLand=false;
+				}
+			}
+			if(temp.getId()== ObjectId.seaLevel){
+				if(getBoundsTop().intersects(temp.getBounds())){
+					
+					falling=false;
+					
+					
+				}
+				else{
+					falling=true;
 				}
 			}
 			if(temp.getId() == ObjectId.trash){

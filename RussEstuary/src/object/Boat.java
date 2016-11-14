@@ -12,13 +12,14 @@ import window.Handler;
 
 public class Boat extends GameObject{
 	
-	private int width;
 	private Handler handler;
 	private int direction = 1;
 	private double initialY = 0;
 	private TrashBin trashBin;
 	private RecycleBin recyclebin;
 	private CompostCounter counter;
+	private double boundary1;
+	private double boundary2;
 	
 	//Clock
 	int timer1 = 0;
@@ -26,14 +27,15 @@ public class Boat extends GameObject{
 	int amount = 0;
 	Random rand = new Random();
 
-	public Boat(double x, double y, ObjectId id, int width, Handler handler, TrashBin trashBin, RecycleBin recyclebin, CompostCounter counter) {
+	public Boat(double x, double y, ObjectId id, Handler handler, TrashBin trashBin, RecycleBin recyclebin, CompostCounter counter, double boundary1, double boundary2) {
 		super(x, y, id);
-		this.width=width;
 		this.handler=handler;
 		initialY = y;
 		this.trashBin = trashBin;
 		this.recyclebin = recyclebin;
 		this.counter = counter;
+		this.boundary1=boundary1;
+		this.boundary2=boundary2;
 	}
 
 	@Override
@@ -46,14 +48,14 @@ public class Boat extends GameObject{
 			timer1 = 0;
 		}
 		timer1 ++;
-		System.out.println(timer1 + ", "+ countdown1);
+		//System.out.println(timer1 + ", "+ countdown1);
 		x += direction;
 		y += .25 * Math.sin(x/25);
 		collide();
 	}
 	
 	public void collide(){
-		if(x+128 >= width || x <= 0){
+		if(x+128 >= boundary2 || x <= boundary1){
 			direction *= -1;
 			y=initialY;
 		}
@@ -72,14 +74,14 @@ public class Boat extends GameObject{
 	}
 	
 	public void spawnTrash(){
-		amount = rand.nextInt(3);
+		amount = rand.nextInt(2);
 		for(int i = 0; i < amount; i++){
 			handler.addObject(new Trash(rand.nextInt((int)x+10)+x, rand.nextInt((int)y+5)+y, ObjectId.trash,trashBin,handler));
 		}
 	}
 	
 	public void spawnRecycle(){
-		amount = rand.nextInt(3);
+		amount = rand.nextInt(2);
 		for(int i = 0; i < amount; i++){
 			handler.addObject(new Recycle(rand.nextInt((int)x+10)+x, rand.nextInt((int)y+5)+y, ObjectId.recycle,recyclebin,handler));
 		}

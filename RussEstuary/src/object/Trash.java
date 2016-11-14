@@ -13,16 +13,17 @@ public class Trash extends GameObject {
 	int damage = 5;
 	double health = 20;
 	boolean canAttack = false;
-	int fallvalue = 1;
 	private Handler handler;
 	boolean isDead = false;
+	double gravityFactor = 0;
 
 	TrashBin trashBin;
 
 	public Trash(double x, double y, ObjectId id, TrashBin trashBin, Handler handler) {
 		super(x, y, id);
 		this.trashBin = trashBin;
-		this.handler=handler;
+		this.handler = handler;
+		setVelY(1);
 	}
 
 	/*
@@ -38,33 +39,27 @@ public class Trash extends GameObject {
 
 	public void dead() {
 		if (health <= 0) {
+			//setVelX(((trashBin.getX() - x) / (trashBin.getY()-y))*8);
 			setVelX((trashBin.getX() - x) / 50);
 			setVelY(-5);
-
+			gravityFactor = 10-((trashBin.getX() - x)/20);
 			canAttack = false;
 			isDead = true;
 		}
-
 	}
-	
-	public boolean checkDeath(){
+
+	public boolean checkDeath() {
 		return isDead;
 	}
 
 	@Override
 	public void tick(LinkedList<GameObject> object) {
-
 		x += velX;
 		y += velY;
-		if (health <= 0) {
-			velY += gravity * 10;
-		}
-
-		y += fallvalue;
-		
-		if(!isDead)
+		if (!isDead)
 			collision(object);
-
+		else
+			velY += gravity * gravityFactor;
 	}
 
 	@Override
@@ -87,7 +82,7 @@ public class Trash extends GameObject {
 			if (temp.getId() == ObjectId.landSurface) {
 				if (getBoundsBottom().intersects(temp.getBounds())) {
 					setY(temp.getY() - 32);
-					fallvalue=0;
+					setVelY(0);
 				}
 			}
 		}

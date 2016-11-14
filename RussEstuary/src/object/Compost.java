@@ -20,7 +20,7 @@ public class Compost extends GameObject {
 
 	public Compost(double x, double y, ObjectId id, Handler handler, CompostCounter counter) {
 		super(x, y, id);
-		this.handler=handler;
+		this.handler = handler;
 		this.counter = counter;
 	}
 
@@ -43,8 +43,8 @@ public class Compost extends GameObject {
 		}
 
 	}
-	
-	public boolean checkDeath(){
+
+	public boolean checkDeath() {
 		return isDead;
 	}
 
@@ -58,20 +58,19 @@ public class Compost extends GameObject {
 		}
 
 		y += fallvalue;
-		
-		if(!isDead)
+
+		if (!isDead)
 			collision(object);
 
 	}
 
 	@Override
 	public void render(Graphics g) {
-		if(!isDead){
-			g.setColor(Color.ORANGE);
-			g.fillRect((int) x, (int) y, 32, 32);
-			g.setColor(Color.red);
-			g.fillRect((int) x, (int) y, (int) ((health / 20) * 32), 2);
-		}
+		g.setColor(Color.ORANGE);
+		g.fillRect((int) x, (int) y, 32, 32);
+		g.setColor(Color.red);
+		g.fillRect((int) x, (int) y, (int) ((health / 20) * 32), 2);
+
 	}
 
 	@Override
@@ -86,7 +85,7 @@ public class Compost extends GameObject {
 			if (temp.getId() == ObjectId.landSurface) {
 				if (getBoundsBottom().intersects(temp.getBounds())) {
 					setY(temp.getY() - 32);
-					fallvalue=0;
+					fallvalue = 0;
 				}
 			}
 		}

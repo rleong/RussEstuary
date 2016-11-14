@@ -1,6 +1,7 @@
 package object;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.LinkedList;
@@ -17,10 +18,12 @@ public class Habitat extends GameObject{
 	private final int TRASHDAMAGE = 1;
 	private Handler handler;
 	private int numberOfHazards = 0;
+	private double width;
 
-	public Habitat(double x, double y, ObjectId id, Handler handler) {
+	public Habitat(double x, double y, ObjectId id, Handler handler, Dimension dm) {
 		super(x, y, id);
 		this.handler = handler;
+		width = dm.getWidth()-dm.getWidth()*3/4;
 	}
 
 	@Override
@@ -42,9 +45,9 @@ public class Habitat extends GameObject{
 			g.setColor(Color.RED);
 		else
 			g.setColor(Color.GRAY);
-		g.fillRect((int) x, (int) y, 600, 64);
+		g.fillRect((int) x, (int) y, (int)width, 64);
 		g.setColor(Color.red);
-		g.fillRect((int) x, (int) y, (int) ((health / 20) * 600), 2);
+		g.fillRect((int) x, (int) y, (int) ((health / 20) * width), 2);
 	}
 	
 	private void collision(LinkedList<GameObject> object) {
@@ -66,7 +69,7 @@ public class Habitat extends GameObject{
 
 	@Override
 	public Rectangle getBounds() {
-		return new Rectangle((int)x + 6, (int) y + 26, 600, 64);
+		return new Rectangle((int)x + 6, (int) y + 26, (int)width, 64);
 	}
 
 }

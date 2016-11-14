@@ -37,5 +37,8 @@ public enum ObjectId {
 	//
 	clock(),
 	boat(),
-	habitat();
+	habitat(),
+	seaLevel(), 
+	RofFactory(),
+	wall();
 }
