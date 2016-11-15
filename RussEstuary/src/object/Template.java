@@ -7,11 +7,12 @@ import java.util.LinkedList;
 
 import framework.GameObject;
 import framework.ObjectId;
+import window.Handler;
 
 public class Template extends GameObject{
 	double theta=Math.PI/2;
-	public Template(double x, double y, ObjectId id) {
-		super(x, y, id);
+	public Template(double x, double y, ObjectId id, Handler handler) {
+		super(x, y, id, handler);
 		
 	}
 

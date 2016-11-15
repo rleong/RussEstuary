@@ -11,12 +11,10 @@ import framework.ObjectId;
 import window.Handler;
 
 public class Runoff extends GameObject {
-	Handler handler;
-	public Runoff(double x, double y,Dimension dm, Handler handler, ObjectId id) {
-		super(x, y, id);
-		this.handler=handler;
+
+	public Runoff(double x, double y, Handler handler, ObjectId id,Dimension dm) {
+		super(x, y, id, handler);
 		setVelX(1.2);
-		
 	}
 
 	@Override

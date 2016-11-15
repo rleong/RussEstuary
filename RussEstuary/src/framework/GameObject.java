@@ -4,18 +4,22 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.LinkedList;
 
+import window.Handler;
+
 public abstract class GameObject {
 	protected ObjectId id;
 	protected double x,y;
 	protected double velX = 0, velY = 0;
 	protected boolean falling=true;
 	protected double gravity =0.055f;
+	protected Handler handler;
 	
 	
-	public GameObject(double x, double y, ObjectId id) {
+	public GameObject(double x, double y, ObjectId id, Handler handler) {
 		this.x = x;
 		this.y = y;
 		this.id = id;
+		this.handler=handler;
 	}
 	
 	public abstract void tick(LinkedList<GameObject> object);

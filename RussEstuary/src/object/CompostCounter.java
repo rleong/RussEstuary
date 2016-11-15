@@ -7,13 +7,14 @@ import java.util.LinkedList;
 
 import framework.GameObject;
 import framework.ObjectId;
+import window.Handler;
 
 public class CompostCounter extends GameObject{
 	
 	private int count=0;
 
-	public CompostCounter(double x, double y, ObjectId id) {
-		super(x, y, id);
+	public CompostCounter(double x, double y, ObjectId id, Handler handler) {
+		super(x, y, id,handler);
 		
 	}
 

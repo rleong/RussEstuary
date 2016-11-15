@@ -13,12 +13,10 @@ import object.Boat;
 import object.CompostCounter;
 import object.Critter;
 import object.Habitat;
-import object.RecycleBin;
 import object.RofFactory;
 import object.Runoff;
-import object.Trash;
-import object.TrashBin;
 import object.Tree;
+import object.WasteBin;
 import window.Handler;
 import window.Window;
 
@@ -38,30 +36,35 @@ public class Game extends Canvas implements Runnable {
 	// Object
 	Handler handler;
 	RofFactory factory;
-	TrashBin trashBin=new TrashBin(550, 550, ObjectId.trashBin,handler);
-	RecycleBin recyclebin=new RecycleBin(500, 550, ObjectId.recycleBin,handler);
-	CompostCounter counter = new CompostCounter(10,10, ObjectId.compostCounter);
+	WasteBin trashBin;
+	WasteBin recyclebin;
+	CompostCounter counter;
 	double[] tempLoc;
 
 	private void init() {
-
 		//Default Objects
 		handler = new Handler();
-		factory = new RofFactory(0, dm.getHeight() * 3 / 5 - 32, ObjectId.RofFactory);
-		handler.creatSurface(dm);
-		handler.addObject(factory);
-		
+		//0		 1		 2					3					 4				
+		//Width, Height, Water Start Width, Water Bottom Height, Water Surface Height
+		handler.creatSurface(dm, handler);
+		tempLoc = handler.spawnLocations(dm);
+		factory = new RofFactory(0, dm.getHeight() * 3 / 5 - 32, ObjectId.RofFactory, handler);
+		trashBin = new WasteBin(dm.getWidth()-50, dm.getHeight()-70, ObjectId.wasteBin,handler,0);
+		recyclebin = new WasteBin(dm.getWidth()-100, dm.getHeight()-70, ObjectId.wasteBin,handler,1);
+		counter = new CompostCounter(10, 10, ObjectId.compostCounter, handler);
+
 		//Game 1 Objects
-		tempLoc = handler.boatLoc(dm);
-		handler.addObject(new Boat(tempLoc[0], tempLoc[1], ObjectId.boat,handler,trashBin, recyclebin, counter,tempLoc[0],dm.getWidth()));		
+		handler.addObject(new Boat(tempLoc[2], tempLoc[4]-40, ObjectId.boat,handler,trashBin, recyclebin, counter,tempLoc[2],tempLoc[0]));		
 		handler.addObject(trashBin);
 		handler.addObject(recyclebin);
 		handler.addObject(counter);
-		tempLoc = handler.habitatLoc(dm);
-		handler.addObject(new Habitat(tempLoc[0], tempLoc[1], ObjectId.habitat,handler, dm));
+		handler.addObject(new Habitat(tempLoc[2], tempLoc[1]-96-64, ObjectId.habitat,handler, dm));
+		
+		//Game 2 Objects
+		handler.addObject(factory);
 		
 		//Critter
-		handler.addObject(new Critter(600, dm.getHeight() * 3 / 5 - 32, ObjectId.critter, true, true, handler));
+		handler.addObject(new Critter(600, dm.getHeight() * 3 / 5 - 32, ObjectId.critter, handler, true, true));
 		this.addKeyListener(new KeyInput(handler));
 	}
 

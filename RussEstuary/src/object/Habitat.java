@@ -16,13 +16,13 @@ public class Habitat extends GameObject{
 	private int timer = 0;
 	private double health = 20;
 	private final int TRASHDAMAGE = 1;
-	private Handler handler;
+	private final double COMPOSTDAMAGE = .5;
 	private int numberOfHazards = 0;
+	private int numberOfCompost = 0;
 	private double width;
 
 	public Habitat(double x, double y, ObjectId id, Handler handler, Dimension dm) {
-		super(x, y, id);
-		this.handler = handler;
+		super(x, y, id,handler);
 		width = dm.getWidth()-dm.getWidth()*3/4;
 	}
 
@@ -32,7 +32,7 @@ public class Habitat extends GameObject{
 			if(timer==count){
 				timer=0;
 				collision(object);
-				health -= numberOfHazards * TRASHDAMAGE;
+				health -= (numberOfHazards * TRASHDAMAGE) + (numberOfCompost * COMPOSTDAMAGE);
 			}
 			timer++;	
 		}
@@ -52,16 +52,16 @@ public class Habitat extends GameObject{
 	
 	private void collision(LinkedList<GameObject> object) {
 		numberOfHazards = 0;
+		numberOfCompost = 0;
 		for (int i = 0; i < handler.object.size(); i++) {
 			GameObject temp = handler.object.get(i);
-			if (temp.getId() == ObjectId.trash) {
+			if (temp.getId() == ObjectId.waste) {
 				if (getBounds().intersects(temp.getBounds())) {
-					numberOfHazards += 1;
-				}
-			}
-			if (temp.getId() == ObjectId.recycle) {
-				if (getBounds().intersects(temp.getBounds())) {
-					numberOfHazards += 1;
+					Waste waste = (Waste)temp;
+					if(waste.getType()!=2)
+						numberOfHazards += 1;
+					else
+						numberOfCompost += 1;
 				}
 			}
 		}

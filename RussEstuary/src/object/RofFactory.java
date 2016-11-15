@@ -12,8 +12,8 @@ import window.Handler;
 
 public class RofFactory extends GameObject {
 
-	public RofFactory(double x, double y, ObjectId id) {
-		super(x, y, id);
+	public RofFactory(double x, double y, ObjectId id, Handler handler) {
+		super(x, y, id, handler);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -38,7 +38,7 @@ public class RofFactory extends GameObject {
 	}
 	
 	public void prodRof(Handler handler,Dimension dm){
-		handler.addObject(new Runoff(x, y-32,dm,handler, ObjectId.runOff));
+		handler.addObject(new Runoff(x, y-32,handler, ObjectId.runOff,dm));
 	}
 
 }

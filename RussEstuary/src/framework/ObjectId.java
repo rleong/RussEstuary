@@ -1,44 +1,36 @@
 package framework;
 
 public enum ObjectId {
-	//drop items
-	oyster(),
-	concreteSlab,
-	
-	//enemy
-	bird(),
-	fish(),
-	
-	//environment
-	land(),
-	landSurface(),
-	
-	water(),
-	waterSurface(),
-	
-	//Hazards
-	recycle(),
-	runOff(),
-	trash(),
+	// Old Stuff
+	recycle(), trashBin(), recycleBin(), trash(), compost(),
+
+	// Unimplemented
 	waterWaste(),
-	compost(),
-	compostCounter(),
+
+	// Drop Items
+	oyster(), concreteSlab,
+
+	// Enemies
+	bird(), fish(),
+
+	// Environment
+	land(), landSurface(), habitat(), seaLevel(),
+
+	water(), waterSurface(),
+
+	// Hazards
+	waves(), runOff(), waste(),
+
+	// Waste Deposits
+	compostCounter(), wasteBin(),
 	
-	waves(),
+	// Barriers
+	tree(), wall(),
 	
-	//critter
-	critter(),
-	
-	//
-	trashBin(),
-	recycleBin(),
-	tree(),
-	
-	//
-	clock(),
-	boat(),
-	habitat(),
-	seaLevel(), 
-	RofFactory(),
-	wall();
+	// Hazard Spawners
+	clock(), boat(), RofFactory(),
+
+	// Player
+	critter();
+
 }

@@ -8,11 +8,12 @@ import java.util.LinkedList;
 
 import framework.GameObject;
 import framework.ObjectId;
+import window.Handler;
 
 public class LandSurface extends GameObject {
-
-	public LandSurface(double x, double y, ObjectId id) {
-		super(x, y, id);
+	
+	public LandSurface(double x, double y, ObjectId id, Handler handler) {
+		super(x, y, id, handler);
 		
 	}
 

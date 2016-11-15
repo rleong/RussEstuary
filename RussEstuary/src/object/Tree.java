@@ -8,11 +8,12 @@ import java.util.LinkedList;
 
 import framework.GameObject;
 import framework.ObjectId;
+import window.Handler;
 
 public class Tree extends GameObject {
 	public int hp;
-	public Tree(double x, double y, ObjectId id) {
-		super(x, y, id);
+	public Tree(double x, double y, ObjectId id, Handler handler) {
+		super(x, y, id, handler);
 		hp=3;
 	}
 

@@ -21,14 +21,16 @@ public class Critter extends GameObject {
 	int health2;
 	int damage;
 	public boolean jump;
-	private Handler handler;
 	public boolean onLand;
+	boolean invulnerable;
+	int timer = 0;
+	int flicker = 0;
 	/*
 	 * Critter constructor
 	 * 
 	 */
-	public Critter(double x, double y, ObjectId id,boolean xdir, boolean ydir,Handler handler) {
-		super(x, y, id);
+	public Critter(double x, double y, ObjectId id, Handler handler, boolean xdir, boolean ydir) {
+		super(x, y, id, handler);
 		this.xdir=xdir;
 		this.ydir=ydir;
 		character=0;
@@ -36,7 +38,6 @@ public class Critter extends GameObject {
 		health0=100;
 		health1=100;
 		health2=100;
-		this.handler=handler;
 		jump=false;
 	}
 	
@@ -89,38 +90,16 @@ public class Critter extends GameObject {
 	public void attack(LinkedList<GameObject> object){
 		for(int i=0;i<object.size();i++){
 			GameObject temp = object.get(i);
-			if(temp.getId()==ObjectId.trash){
-				Trash trash = (Trash)temp;
-				if(!trash.checkDeath()){
-					if(trash.canAttack){
-						trash.health-=damage;
+			if(temp.getId()==ObjectId.waste){
+				Waste waste = (Waste)temp;
+				if(!waste.checkDeath()){
+					if(waste.canAttack){
+						waste.health-=damage;
 					}
-					if(trash.health<=0){
-						trash.dead();
+					if(waste.health<=0){
+						waste.dead();
 					}
-				}				
-			}
-			if(temp.getId()==ObjectId.recycle){
-				Recycle recycle = (Recycle)temp;
-				if(!recycle.checkDeath()){
-					if(recycle.canAttack){
-						recycle.health-=damage;
-					}
-					if(recycle.health<=0){
-						recycle.dead();
-					}
-				}				
-			}
-			if(temp.getId()==ObjectId.compost){
-				Compost compost = (Compost)temp;
-				if(!compost.checkDeath()){
-					if(compost.canAttack){
-						compost.health-=damage;
-					}
-					if(compost.health<=0){
-						compost.dead();
-					}
-				}	
+				}
 			}
 		}
 	}
@@ -133,7 +112,7 @@ public class Critter extends GameObject {
 	}
 	
 	public void planT(){
-		handler.addObject(new Tree(x,y,ObjectId.tree));
+		handler.addObject(new Tree(x,y,ObjectId.tree,handler));
 	}
 
 	@Override
@@ -143,6 +122,17 @@ public class Critter extends GameObject {
 		
 		if(falling){
 			velY+=gravity;
+		}
+		
+		if(invulnerable){
+			if(timer == 40){
+				invulnerable = false;
+				timer = 0;
+			}
+			timer++;
+			flicker++;
+		}else{
+			flicker = 0;
 		}
 		
 		collision(object);
@@ -175,37 +165,32 @@ public class Critter extends GameObject {
 					falling=true;
 				}
 			}
-			if(temp.getId() == ObjectId.trash){
-				Trash trash = (Trash)temp;
+			if(temp.getId() == ObjectId.waste){
+				Waste waste = (Waste)temp;
 				if(getBounds().intersects(temp.getBounds())){
-					trash.canAttack=true;
+					waste.canAttack=true;
 					//System.out.println("in range");
 				}
 				if(!getBounds().intersects(temp.getBounds())){
-					trash.canAttack=false;
+					waste.canAttack=false;
 					//System.out.println("out of range");
 				}
-			}
-			if(temp.getId() == ObjectId.recycle){
-				Recycle recycle = (Recycle)temp;
-				if(getBounds().intersects(temp.getBounds())){
-					recycle.canAttack=true;
+				if(getBodyBounds().intersects(temp.getBounds())){
+					if(waste.canAttack && !invulnerable){
+						invulnerable = true;
+						switch(character){
+						case 0:
+							health0 -= 5;
+							break;
+						case 1:
+							health1 -= 5;
+							break;
+						case 2:
+							health2 -= 5;
+							break;
+						}
+					}
 					//System.out.println("in range");
-				}
-				if(!getBounds().intersects(temp.getBounds())){
-					recycle.canAttack=false;
-					//System.out.println("out of range");
-				}
-			}
-			if(temp.getId() == ObjectId.compost){
-				Compost compost = (Compost)temp;
-				if(getBounds().intersects(temp.getBounds())){
-					compost.canAttack=true;
-					//System.out.println("in range");
-				}
-				if(!getBounds().intersects(temp.getBounds())){
-					compost.canAttack=false;
-					//System.out.println("out of range");
 				}
 			}
 		}
@@ -215,21 +200,24 @@ public class Critter extends GameObject {
 
 	@Override
 	public void render(Graphics g) {
-		switch(character){
-		case 0:
-			g.setColor(Color.RED);
-			g.fillRect((int)x, (int)y, 32, 32);
-			break;
-		case 1:
-			g.setColor(Color.CYAN);
-			g.fillRect((int)x, (int)y, 32, 32);
-			break;
-		case 2:
-			g.setColor(Color.lightGray);
-			g.fillRect((int)x, (int)y, 32, 32);
-			break;
+		
+		if(flicker == 0 || flicker % 4 == 0){
+			switch(character){
+			case 0:
+				g.setColor(Color.RED);
+				break;
+			case 1:
+				g.setColor(Color.CYAN);
+				break;
+			case 2:
+				g.setColor(Color.lightGray);
+				break;
+			}
+		}else{
+			g.setColor(Color.BLACK);
 		}
 		
+		g.fillRect((int)x, (int)y, 32, 32);
 		
 		
 		Graphics2D g2d = (Graphics2D)g;
@@ -247,6 +235,10 @@ public class Critter extends GameObject {
 	public Rectangle getBounds() {
 		
 		return new Rectangle((int)x-16,(int)y-16, 64,64);
+	}
+	
+	public Rectangle getBodyBounds(){
+		return new Rectangle((int)x,(int)y, 32, 32);
 	}
 	
 	public Rectangle getBoundsTop() {
