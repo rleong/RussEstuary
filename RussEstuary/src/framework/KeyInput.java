@@ -60,9 +60,7 @@ public class KeyInput extends KeyAdapter {
 					temp.setVelY(0);
 				}
 				if (key == KeyEvent.VK_SPACE) {
-
 					t.attack(handler.object);
-
 				}
 				if (key == KeyEvent.VK_I) {
 					t.changeCharacter();
