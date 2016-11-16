@@ -14,12 +14,15 @@ public class Waste extends GameObject {
 	double health = 20;
 	boolean canAttack = false;
 	boolean isDead = false;
+	boolean isTrapped = false;
 	int type = 0;
 
 	CompostCounter counter;
-	
+
 	WasteBin trashBin;
 	WasteBin recycleBin;
+	Bubble bubble;
+	double boundaries = 0;
 
 	public Waste(double x, double y, ObjectId id, Handler handler, WasteBin trashBin, WasteBin recycleBin,
 			CompostCounter counter, int type) {
@@ -45,9 +48,12 @@ public class Waste extends GameObject {
 	public void dead() {
 		if (health <= 0) {
 			switch (type) {
-			case 0: // TRASH & RECYCLE
-			case 1:
+			case 0: // TRASH
 				setVelX((trashBin.getX() - x) / 50);
+				setVelY(-15);
+				break;
+			case 1:
+				setVelX((recycleBin.getX() - x) / 50);
 				setVelY(-15);
 				break;
 			case 2: // COMPOST
@@ -68,8 +74,13 @@ public class Waste extends GameObject {
 
 	@Override
 	public void tick(LinkedList<GameObject> object) {
-		x += velX;
-		y += velY;
+		if (!isTrapped) {
+			x += velX;
+			y += velY;
+		} else {
+			bubbleCollide();
+		}
+
 		if (!isDead)
 			collision(object);
 		else {
@@ -78,13 +89,15 @@ public class Waste extends GameObject {
 			case 0: // TRASH
 				if (x >= trashBin.getX() && x <= trashBin.getX() + 32) {
 					velX = 0;
-					//System.out.println("Success" + x + " " + trashBin.getX());
+					// System.out.println("Success" + x + " " +
+					// trashBin.getX());
 				}
 				break;
 			case 1: // RECYCLE
 				if (x >= recycleBin.getX() && x <= recycleBin.getX() + 32) {
 					velX = 0;
-					//System.out.println("Success" + x + " " + recycleBin.getX());
+					// System.out.println("Success" + x + " " +
+					// recycleBin.getX());
 				}
 				break;
 			case 2: // COMPOST
@@ -93,6 +106,25 @@ public class Waste extends GameObject {
 				System.out.println("SOMETHING WENT WRONG YO");
 				break;
 			}
+		}
+		
+		if(isTrapped){
+			if(x+50 >= boundaries){
+				isTrapped = false;
+				x=recycleBin.getX();
+				health = 0;
+				dead();
+			}
+		}
+	}
+
+	public boolean getIsTrapped() {
+		return isTrapped;
+	}
+
+	public void setIsTrapped(boolean check) {
+		if (type == 1) {
+			isTrapped = check;
 		}
 	}
 
@@ -128,6 +160,11 @@ public class Waste extends GameObject {
 		return type;
 	}
 
+	public void bubbleCollide() {
+		x = bubble.getX()-2;
+		y += 1 * Math.sin(x / 25);
+	}
+
 	private void collision(LinkedList<GameObject> object) {
 		for (int i = 0; i < handler.object.size(); i++) {
 			GameObject temp = handler.object.get(i);
@@ -137,7 +174,22 @@ public class Waste extends GameObject {
 					setVelY(0);
 				}
 			}
+			if (temp.getId() == ObjectId.bubble) {
+				if (getBounds().intersects(temp.getBounds())) {
+					if (type == 1) {
+						if (!isTrapped) {
+							isTrapped = true;
+							bubble = (Bubble) temp;
+							boundaries = bubble.getBoundaries();
+						}
+					}
+				}
+			}
 		}
+	}
+	
+	public void setBoundaries(double boundaries){
+		this.boundaries=boundaries;
 	}
 
 	public Rectangle getBoundsBottom() {

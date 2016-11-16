@@ -64,7 +64,7 @@ public class Game extends Canvas implements Runnable {
 		handler.addObject(factory);
 		
 		//Critter
-		handler.addObject(new Critter(600, dm.getHeight() * 3 / 5 - 32, ObjectId.critter, handler, true, true));
+		handler.addObject(new Critter(600, dm.getHeight() * 3 / 5 - 32, ObjectId.critter, handler, true, true, tempLoc[0]));
 		this.addKeyListener(new KeyInput(handler));
 	}
 

@@ -19,7 +19,7 @@ public enum ObjectId {
 	water(), waterSurface(),
 
 	// Hazards
-	waves(), runOff(), waste(),
+	waves(), runOff(), waste(), bubble(),
 
 	// Waste Deposits
 	compostCounter(), wasteBin(),

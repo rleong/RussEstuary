@@ -25,11 +25,12 @@ public class Critter extends GameObject {
 	boolean invulnerable;
 	int timer = 0;
 	int flicker = 0;
+	double bounds;
 	/*
 	 * Critter constructor
 	 * 
 	 */
-	public Critter(double x, double y, ObjectId id, Handler handler, boolean xdir, boolean ydir) {
+	public Critter(double x, double y, ObjectId id, Handler handler, boolean xdir, boolean ydir, double bounds) {
 		super(x, y, id, handler);
 		this.xdir=xdir;
 		this.ydir=ydir;
@@ -39,6 +40,7 @@ public class Critter extends GameObject {
 		health1=100;
 		health2=100;
 		jump=false;
+		this.bounds=bounds;
 	}
 	
 	public void setDamage(){
@@ -73,13 +75,14 @@ public class Critter extends GameObject {
 	/*
 	 * ability switch depends on character token
 	 */
-	private void ability(int character){
+	public void ability(){
 		switch(character){
-		case 0:
+		case 0: // CRAB
 			break;
-		case 1:
+		case 1: // OYSTER
+			handler.addObject(new Bubble(x-8, y-8, ObjectId.bubble, handler, bounds));
 			break;
-		case 2:
+		case 2: // HORSESHOE CRAB
 			break;
 		}
 	}
@@ -93,7 +96,7 @@ public class Critter extends GameObject {
 			if(temp.getId()==ObjectId.waste){
 				Waste waste = (Waste)temp;
 				if(!waste.checkDeath()){
-					if(waste.canAttack){
+					if(waste.canAttack && !waste.getIsTrapped()){
 						waste.health-=damage;
 					}
 					if(waste.health<=0){
@@ -125,7 +128,7 @@ public class Critter extends GameObject {
 		}
 		
 		if(invulnerable){
-			if(timer == 40){
+			if(timer == 80){
 				invulnerable = false;
 				timer = 0;
 			}
@@ -200,8 +203,20 @@ public class Critter extends GameObject {
 
 	@Override
 	public void render(Graphics g) {
+		g.setColor(Color.red);
+		switch(character){
+		case 0:
+			g.drawString(health0+"", 10, 40);
+			break;
+		case 1:
+			g.drawString(health1+"", 10, 40);
+			break;
+		case 2:
+			g.drawString(health2+"", 10, 40);
+			break;
+		}
 		
-		if(flicker == 0 || flicker % 4 == 0){
+		if(flicker == 0 || flicker % 10 == 0){
 			switch(character){
 			case 0:
 				g.setColor(Color.RED);
@@ -229,6 +244,8 @@ public class Critter extends GameObject {
 		
 		g.setColor(Color.gray);
 		g2d.draw(getBounds());
+		
+		//System.out.println(health0 + " " + health1 + " " + health2);
 	}
 
 	@Override
