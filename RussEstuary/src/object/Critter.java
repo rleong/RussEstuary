@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.ImageObserver;
 import java.util.LinkedList;
 
 import javax.swing.Timer;
@@ -13,6 +14,7 @@ import javax.swing.Timer;
 import control.Game;
 import framework.GameObject;
 import framework.ObjectId;
+import gfx.Images;
 import window.Handler;
 
 public class Critter extends GameObject {
@@ -56,6 +58,10 @@ public class Critter extends GameObject {
 	int nameXLocation;
 	int nameYLocation;
 
+	// GFX & Animations
+	int picNum = 0;
+	Images images;
+
 	// Menu
 	// boolean menuActivation = false;
 
@@ -63,7 +69,7 @@ public class Critter extends GameObject {
 	boolean debugging = false;
 
 	public Critter(double x, double y, ObjectId id, Handler handler, boolean xdir, boolean ydir, double xbounds,
-			double ybounds, Inventory inventory, Game game) {
+			double ybounds, Inventory inventory, Game game, Images images) {
 		// Basics
 		super(x, y, id, handler);
 		this.xdir = xdir;
@@ -90,6 +96,8 @@ public class Critter extends GameObject {
 		healthBarXLocation = (int) (xbounds - (xbounds * 1 / 8));
 		healthBarYLocation = (int) (ybounds - (ybounds * 95 / 100));
 
+		// GFX & Animations
+		this.images = images;
 	}
 
 	@Override
@@ -231,6 +239,9 @@ public class Critter extends GameObject {
 		// Menu
 		// if(menuActivation)
 		// drawMenu(g);
+		
+		// Animations
+		drawWateringPlantAction(g);
 
 		// Debugging Purposes Only
 		if (debugging) {
@@ -259,6 +270,15 @@ public class Critter extends GameObject {
 	 * public void toggleMenu(){ if(menuActivation) menuActivation = false; else
 	 * menuActivation = true; }
 	 */
+	
+	// Animations & GFX
+	public void drawWateringPlantAction(Graphics g){
+		picNum = (picNum + 1) % images.getActionFrameCount();
+		
+		if(game.isPause()){
+			g.drawImage(images.getWateringPlant(picNum), (int) x, (int) y - 32, game);
+		}
+	}
 
 	// Set Character Damage
 	public void setDamage() {
@@ -358,7 +378,7 @@ public class Critter extends GameObject {
 
 	// Plants plants
 	public void planT(int type) {
-		handler.addObject(new Tree(x, y, ObjectId.tree, handler, type, game));
+		handler.addObject(new Tree(x, ybounds * 3 / 5 - 32, ObjectId.tree, handler, type, game));
 	}
 
 	/**

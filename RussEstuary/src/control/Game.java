@@ -5,11 +5,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferStrategy;
+
+import javax.swing.Timer;
 
 import framework.KeyInput;
 import framework.MouseInput;
 import framework.ObjectId;
+import gfx.Images;
 import object.Boat;
 import object.Inventory;
 import object.Critter;
@@ -33,7 +38,8 @@ public class Game extends Canvas implements Runnable {
 	private boolean running = false;
 	private Thread thread;
 	public int count = 0;
-
+	boolean pause = false;
+	Timer clock;
 	int nRof = 0;
 
 	public int trees = 0;
@@ -45,6 +51,7 @@ public class Game extends Canvas implements Runnable {
 	Inventory inventory;
 	double[] dmBoundaries;
 	Critter critter;
+	Images images = new Images();
 
 	private void init() {
 		// Default Objects
@@ -59,8 +66,8 @@ public class Game extends Canvas implements Runnable {
 		trashBin = new WasteBin(dm.getWidth() - 50, dm.getHeight() - 70, ObjectId.wasteBin, handler, 0);
 		recyclebin = new WasteBin(dm.getWidth() - 100, dm.getHeight() - 70, ObjectId.wasteBin, handler, 1);
 		inventory = new Inventory(10, 10, ObjectId.inventory, handler);
-		critter = new Critter(600, dm.getHeight() * 3 / 5 - 32, ObjectId.critter, handler, true, true,
-				dmBoundaries[0], dmBoundaries[1], inventory, this);
+		critter = new Critter(600, dm.getHeight() * 3 / 5 - 32, ObjectId.critter, handler, true, true, dmBoundaries[0],
+				dmBoundaries[1], inventory, this, images);
 
 		// Game 1 Objects
 		handler.addObject(new Boat(dmBoundaries[2], dmBoundaries[4] - 40, ObjectId.boat, handler, trashBin, recyclebin,
@@ -76,8 +83,8 @@ public class Game extends Canvas implements Runnable {
 		// Critter
 		handler.addObject(critter);
 		inventory.setCritter(critter);
-		this.addKeyListener(new KeyInput(handler));
-		this.addMouseListener(new MouseInput(handler));
+		this.addKeyListener(new KeyInput(handler, this));
+		this.addMouseListener(new MouseInput(handler, this));
 	}
 
 	public synchronized void start() {
@@ -160,7 +167,7 @@ public class Game extends Canvas implements Runnable {
 	public void setCount(int count) {
 		this.count = count;
 	}
-	
+
 	public int getnRof() {
 		return nRof;
 	}
@@ -168,6 +175,25 @@ public class Game extends Canvas implements Runnable {
 	public void setnRof(int nRof) {
 		this.nRof = nRof;
 	}
+
+	public boolean isPause() {
+		return pause;
+	}
+
+	public void setPause(int duration) {
+		Timer clock = new Timer(duration, listener);
+		pause = true;
+		critter.setVelX(0);
+		critter.setVelY(0);
+		clock.start();
+	}
+
+	ActionListener listener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			pause = false;
+		}
+	};
 
 	public static void main(String args[]) {
 		Game game = new Game();
