@@ -8,9 +8,10 @@ import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 
 import framework.KeyInput;
+import framework.MouseInput;
 import framework.ObjectId;
 import object.Boat;
-import object.CompostCounter;
+import object.Inventory;
 import object.Critter;
 import object.Habitat;
 import object.RofFactory;
@@ -31,41 +32,52 @@ public class Game extends Canvas implements Runnable {
 	static Dimension dm = new Dimension(tk.getScreenSize());
 	private boolean running = false;
 	private Thread thread;
+	public int count = 0;
 
 	int nRof = 0;
+
+	public int trees = 0;
 	// Object
 	Handler handler;
 	RofFactory factory;
 	WasteBin trashBin;
 	WasteBin recyclebin;
-	CompostCounter counter;
-	double[] tempLoc;
+	Inventory inventory;
+	double[] dmBoundaries;
+	Critter critter;
 
 	private void init() {
-		//Default Objects
-		handler = new Handler();
-		//0		 1		 2					3					 4				
-		//Width, Height, Water Start Width, Water Bottom Height, Water Surface Height
-		handler.creatSurface(dm, handler);
-		tempLoc = handler.spawnLocations(dm);
-		factory = new RofFactory(0, dm.getHeight() * 3 / 5 - 32, ObjectId.RofFactory, handler);
-		trashBin = new WasteBin(dm.getWidth()-50, dm.getHeight()-70, ObjectId.wasteBin,handler,0);
-		recyclebin = new WasteBin(dm.getWidth()-100, dm.getHeight()-70, ObjectId.wasteBin,handler,1);
-		counter = new CompostCounter(10, 10, ObjectId.compostCounter, handler);
+		// Default Objects
+		handler = new Handler(this);
+		// 0 1 2 3 4
+		// Width, Height, Water Start Width, Water Bottom Height, Water Surface
+		// Height
+		handler.creatSurface(dm);
+		dmBoundaries = handler.spawnLocations(dm);
+		// factory = new RofFactory(0, dm.getHeight() * 3 / 5 - 32,
+		// ObjectId.RofFactory, handler);
+		trashBin = new WasteBin(dm.getWidth() - 50, dm.getHeight() - 70, ObjectId.wasteBin, handler, 0);
+		recyclebin = new WasteBin(dm.getWidth() - 100, dm.getHeight() - 70, ObjectId.wasteBin, handler, 1);
+		inventory = new Inventory(10, 10, ObjectId.inventory, handler);
+		critter = new Critter(600, dm.getHeight() * 3 / 5 - 32, ObjectId.critter, handler, true, true,
+				dmBoundaries[0], dmBoundaries[1], inventory, this);
 
-		//Game 1 Objects
-		handler.addObject(new Boat(tempLoc[2], tempLoc[4]-40, ObjectId.boat,handler,trashBin, recyclebin, counter,tempLoc[2],tempLoc[0]));		
+		// Game 1 Objects
+		handler.addObject(new Boat(dmBoundaries[2], dmBoundaries[4] - 40, ObjectId.boat, handler, trashBin, recyclebin,
+				inventory, dmBoundaries[2], dmBoundaries[0]));
 		handler.addObject(trashBin);
 		handler.addObject(recyclebin);
-		handler.addObject(counter);
-		handler.addObject(new Habitat(tempLoc[2], tempLoc[1]-96-64, ObjectId.habitat,handler, dm));
-		
-		//Game 2 Objects
-		handler.addObject(factory);
-		
-		//Critter
-		handler.addObject(new Critter(600, dm.getHeight() * 3 / 5 - 32, ObjectId.critter, handler, true, true, tempLoc[0]));
+		handler.addObject(inventory);
+		handler.addObject(new Habitat(dmBoundaries[2], dmBoundaries[1] - 96 - 64, ObjectId.habitat, handler, dm));
+
+		// Game 2 Objects
+		// handler.addObject(factory);
+
+		// Critter
+		handler.addObject(critter);
+		inventory.setCritter(critter);
 		this.addKeyListener(new KeyInput(handler));
+		this.addMouseListener(new MouseInput(handler));
 	}
 
 	public synchronized void start() {
@@ -107,10 +119,10 @@ public class Game extends Canvas implements Runnable {
 				// System.out.println("FPS: " + frames + " TICKS: " + updates);
 				frames = 0;
 				updates = 0;
-				if (nRof < 4) {
-					factory.prodRof(handler, dm);
-					nRof += 1;
-				}
+				// if (nRof < 4) {
+				// factory.prodRof(handler, dm);
+				// nRof += 1;
+				// }
 			}
 
 		}
@@ -139,6 +151,22 @@ public class Game extends Canvas implements Runnable {
 		//
 		g.dispose();
 		bs.show();
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+	
+	public int getnRof() {
+		return nRof;
+	}
+
+	public void setnRof(int nRof) {
+		this.nRof = nRof;
 	}
 
 	public static void main(String args[]) {

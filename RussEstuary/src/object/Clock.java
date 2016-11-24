@@ -17,9 +17,9 @@ public class Clock extends GameObject{
 	Random rand = new Random();
 	WasteBin trashbin;
 	WasteBin recyclebin;
-	CompostCounter counter;
+	Inventory counter;
 
-	public Clock(double x, double y, ObjectId id, Handler handler, WasteBin trashbin, WasteBin recyclebin, CompostCounter counter) {
+	public Clock(double x, double y, ObjectId id, Handler handler, WasteBin trashbin, WasteBin recyclebin, Inventory counter) {
 		super(x, y, id, handler);
 		this.trashbin=trashbin;
 		this.recyclebin=recyclebin;

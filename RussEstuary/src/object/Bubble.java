@@ -29,7 +29,7 @@ public class Bubble extends GameObject{
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Color.CYAN);
+		g.setColor(new Color(006666));
 		g.drawOval((int)x, (int)y, 48, 48);
 		g.setColor(Color.WHITE);
 		g.drawOval((int)x+12, (int)y+6, 12, 10);

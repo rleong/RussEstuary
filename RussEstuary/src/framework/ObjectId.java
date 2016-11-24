@@ -5,24 +5,24 @@ public enum ObjectId {
 	recycle(), trashBin(), recycleBin(), trash(), compost(),
 
 	// Unimplemented
-	waterWaste(),
+	waterWaste(), 
 
 	// Drop Items
-	oyster(), concreteSlab,
+	oyster(), concreteSlab, seed(),
 
 	// Enemies
 	bird(), fish(),
 
 	// Environment
-	land(), landSurface(), habitat(), seaLevel(),
+	land(), landSurface(), habitat(), seaLevel(), sand(),
 
-	water(), waterSurface(),
+	water(), waterSurface(), waterTree(), 
 
 	// Hazards
 	waves(), runOff(), waste(), bubble(),
 
 	// Waste Deposits
-	compostCounter(), wasteBin(),
+	wasteBin(),
 	
 	// Barriers
 	tree(), wall(),
@@ -31,6 +31,6 @@ public enum ObjectId {
 	clock(), boat(), RofFactory(),
 
 	// Player
-	critter();
+	inventory(), critter();
 
 }

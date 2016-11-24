@@ -3,8 +3,12 @@ package object;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.Random;
+
+import javax.swing.Timer;
 
 import framework.GameObject;
 import framework.ObjectId;
@@ -16,19 +20,19 @@ public class Boat extends GameObject {
 	private double initialY = 0;
 	private WasteBin trashBin;
 	private WasteBin recyclebin;
-	private CompostCounter counter;
+	private Inventory counter;
 	private double boundary1;
 	private double boundary2;
-	private double[] dropLocations;
 
-	// Clock
-	int timer1 = 0;
-	int countdown1 = 0;
+	// Random Droppings
 	int amount = 0;
 	Random rand = new Random();
+	
+	// Swing Timer
+	Timer clock;
 
 	public Boat(double x, double y, ObjectId id, Handler handler, WasteBin trashBin, WasteBin recyclebin,
-			CompostCounter counter, double boundary1, double boundary2) {
+			Inventory counter, double boundary1, double boundary2) {
 		super(x, y, id, handler);
 		this.handler = handler;
 		initialY = y;
@@ -37,23 +41,20 @@ public class Boat extends GameObject {
 		this.counter = counter;
 		this.boundary1 = boundary1;
 		this.boundary2 = boundary2;
-		setSpawnLocations(boundary1, boundary2);
+		clock = new Timer(2000, listener);
+		clock.start();
 	}
+	
+	ActionListener listener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			spawnWaste();
+			clock.restart();
+		}
+	};
 
 	@Override
 	public void tick(LinkedList<GameObject> object) {
-		for(int i = 0; i < 4; i++){
-			if(x == dropLocations[i]){
-				spawnWaste();
-			}
-		}
-		if (timer1 + 1 == countdown1) {
-			countdown1 = rand.nextInt(500);
-			spawnWaste();
-			timer1 = 0;
-		}
-		timer1++;
-		// System.out.println(timer1 + ", "+ countdown1);
 		x += direction;
 		y += .25 * Math.sin(x / 25);
 		collide();
@@ -101,12 +102,6 @@ public class Boat extends GameObject {
 			System.out.println("Something went wrong!");
 			break;
 		}
-	}
-	
-	public void setSpawnLocations(double boundary1, double boundary2){
-		double temp1 = boundary2-boundary1;
-		temp1 = temp1 / 4;
-		dropLocations =new double[] {boundary1, boundary1+temp1, boundary1+temp1*2, boundary2-32};
 	}
 
 }

@@ -17,7 +17,7 @@ public class Waste extends GameObject {
 	boolean isTrapped = false;
 	int type = 0;
 
-	CompostCounter counter;
+	Inventory counter;
 
 	WasteBin trashBin;
 	WasteBin recycleBin;
@@ -25,7 +25,7 @@ public class Waste extends GameObject {
 	double boundaries = 0;
 
 	public Waste(double x, double y, ObjectId id, Handler handler, WasteBin trashBin, WasteBin recycleBin,
-			CompostCounter counter, int type) {
+			Inventory counter, int type) {
 		super(x, y, id, handler);
 		this.trashBin = trashBin;
 		this.recycleBin = recycleBin;
@@ -57,7 +57,7 @@ public class Waste extends GameObject {
 				setVelY(-15);
 				break;
 			case 2: // COMPOST
-				counter.setCount();
+				counter.addCompost();
 				break;
 			default: // ERROR
 				System.out.println("SOMETHING WENT WRONG YO");
@@ -130,6 +130,8 @@ public class Waste extends GameObject {
 
 	@Override
 	public void render(Graphics g) {
+		
+		// Waste Type
 		switch (type) {
 		case 0: // TRASH
 			g.setColor(Color.BLUE);
@@ -146,8 +148,27 @@ public class Waste extends GameObject {
 			break;
 		}
 		g.fillRect((int) x, (int) y, 32, 32);
+		
+		// Waste Health
 		g.setColor(Color.red);
 		g.fillRect((int) x, (int) y, (int) ((health / 20) * 32), 2);
+		
+		// Waste Name
+		g.setColor(Color.WHITE);
+		switch (type) {
+		case 0: // TRASH
+			g.drawString("Trash", (int)x, (int)y-10);
+			break;
+		case 1: // RECYCLE
+			g.drawString("Recycle", (int)x-4, (int)y-10);
+			break;
+		case 2: // COMPOST
+			g.drawString("Compost", (int)x-8, (int)y-10);
+			break;
+		default: // ERROR
+			g.drawString("Error", (int)x, (int)y-10);
+			break;
+		}
 	}
 
 	@Override
@@ -168,7 +189,7 @@ public class Waste extends GameObject {
 	private void collision(LinkedList<GameObject> object) {
 		for (int i = 0; i < handler.object.size(); i++) {
 			GameObject temp = handler.object.get(i);
-			if (temp.getId() == ObjectId.landSurface) {
+			if (temp.getId() == ObjectId.sand) {
 				if (getBoundsBottom().intersects(temp.getBounds())) {
 					setY(temp.getY() - 32);
 					setVelY(0);
