@@ -2,6 +2,7 @@ package window;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.Collections;
 import java.util.LinkedList;
 
 import control.Game;
@@ -39,28 +40,22 @@ public class Handler {
 					object.remove(temp);
 				}
 			}
-		}
-
-		for (int i = 0; i < object.size(); i++) {
-			temp = object.get(i);
 			if (temp.getId() == ObjectId.waste) {
 				Waste waste = (Waste) temp;
 				if (waste.getType() == 2 && waste.checkDeath()) {
 					object.remove(temp);
 				}
 			}
-		}
-
-		for (int i = 0; i < object.size(); i++) {
-			temp = object.get(i);
 			if (temp.getId() == ObjectId.bubble) {
 				Bubble bubble = (Bubble) temp;
 				if (bubble.getDeath()) {
 					object.remove(temp);
 				}
 			}
+			if (temp.getId() == ObjectId.critter && i != object.size()-1) {
+				Collections.swap(object, i, object.size()-1);
+			}
 		}
-
 	}
 
 	public void render(Graphics g) {

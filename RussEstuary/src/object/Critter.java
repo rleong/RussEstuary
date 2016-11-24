@@ -276,7 +276,7 @@ public class Critter extends GameObject {
 		picNum = (picNum + 1) % images.getActionFrameCount();
 		
 		if(game.isPause()){
-			g.drawImage(images.getWateringPlant(picNum), (int) x, (int) y - 32, game);
+			g.drawImage(images.getWateringPlant(picNum), (int) x, (int) y - 42, game);
 		}
 	}
 

@@ -192,6 +192,7 @@ public class Game extends Canvas implements Runnable {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			pause = false;
+			clock.stop();
 		}
 	};
 
