@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import control.Game;
 import framework.GameObject;
 import framework.ObjectId;
+import object.Boat;
 import object.Bubble;
 import object.LandSurface;
 import object.Tree;
@@ -55,6 +56,36 @@ public class Handler {
 			if (temp.getId() == ObjectId.critter && i != object.size()-1) {
 				Collections.swap(object, i, object.size()-1);
 			}
+		}
+	}
+	
+	public void removeGame1(){
+		for (int i = 0; i < object.size(); i++){
+			temp = object.get(i);
+			if (temp.getId() == ObjectId.waste){
+				object.remove(i);
+			} else if (temp.getId() == ObjectId.boat){
+				Boat boat = (Boat) temp;
+				boat.removeBoat();
+				object.remove(i);
+			} else if (temp.getId() == ObjectId.wasteBin) {
+				object.remove(i);
+			} 
+		}
+		
+		// I have to do it a second time for some reason, cause 
+		// there are some residual wastes.
+		for (int i = 0; i < object.size(); i++){
+			temp = object.get(i);
+			if (temp.getId() == ObjectId.waste){
+				object.remove(i);
+			} else if (temp.getId() == ObjectId.boat){
+				Boat boat = (Boat) temp;
+				boat.removeBoat();
+				object.remove(i);
+			} else if (temp.getId() == ObjectId.wasteBin) {
+				object.remove(i);
+			} 
 		}
 	}
 

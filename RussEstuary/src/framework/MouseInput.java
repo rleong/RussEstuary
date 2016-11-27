@@ -1,11 +1,9 @@
 package framework;
 
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import control.Game;
-import object.Critter;
 import object.Inventory;
 import window.Handler;
 

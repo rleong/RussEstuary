@@ -78,6 +78,10 @@ public class Boat extends GameObject {
 
 		return null;
 	}
+	
+	public void removeBoat(){
+		clock.stop();
+	}
 
 	public void spawnWaste() {
 		amount = rand.nextInt(4);

@@ -20,8 +20,6 @@ import object.Inventory;
 import object.Critter;
 import object.Habitat;
 import object.RofFactory;
-import object.Runoff;
-import object.Tree;
 import object.WasteBin;
 import window.Handler;
 import window.Window;
@@ -53,6 +51,13 @@ public class Game extends Canvas implements Runnable {
 	Critter critter;
 	Images images = new Images();
 
+	// Game Conditions
+	boolean gameover = false;
+	boolean game1 = true;
+	boolean game2 = false;
+	boolean game3 = false;
+	Timer gameTime;
+
 	private void init() {
 		// Default Objects
 		handler = new Handler(this);
@@ -61,8 +66,7 @@ public class Game extends Canvas implements Runnable {
 		// Height
 		handler.creatSurface(dm);
 		dmBoundaries = handler.spawnLocations(dm);
-		// factory = new RofFactory(0, dm.getHeight() * 3 / 5 - 32,
-		// ObjectId.RofFactory, handler);
+		factory = new RofFactory(0, dm.getHeight() * 3 / 5 - 32, ObjectId.RofFactory, handler, this);
 		trashBin = new WasteBin(dm.getWidth() - 50, dm.getHeight() - 70, ObjectId.wasteBin, handler, 0);
 		recyclebin = new WasteBin(dm.getWidth() - 100, dm.getHeight() - 70, ObjectId.wasteBin, handler, 1);
 		inventory = new Inventory(10, 10, ObjectId.inventory, handler);
@@ -77,14 +81,15 @@ public class Game extends Canvas implements Runnable {
 		handler.addObject(inventory);
 		handler.addObject(new Habitat(dmBoundaries[2], dmBoundaries[1] - 96 - 64, ObjectId.habitat, handler, dm));
 
-		// Game 2 Objects
-		// handler.addObject(factory);
-
 		// Critter
 		handler.addObject(critter);
 		inventory.setCritter(critter);
 		this.addKeyListener(new KeyInput(handler, this));
 		this.addMouseListener(new MouseInput(handler, this));
+
+		// Game Timer
+		gameTime = new Timer(10000, gameTimeListener);
+		gameTime.start();
 	}
 
 	public synchronized void start() {
@@ -123,13 +128,21 @@ public class Game extends Canvas implements Runnable {
 
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
-				// System.out.println("FPS: " + frames + " TICKS: " + updates);
+				System.out.println("FPS: " + frames + " TICKS: " + updates);
 				frames = 0;
 				updates = 0;
-				// if (nRof < 4) {
-				// factory.prodRof(handler, dm);
-				// nRof += 1;
-				// }
+				if(game2){
+					if(trees<=3){
+						factory.prodT(handler, dm);
+						trees+=1;
+					}
+					if(nRof<4){
+						factory.prodRof(handler,dm);
+						
+						nRof+=1;
+						
+					}
+				}
 			}
 
 		}
@@ -181,7 +194,7 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	public void setPause(int duration) {
-		Timer clock = new Timer(duration, listener);
+		clock = new Timer(duration, listener);
 		pause = true;
 		critter.setVelX(0);
 		critter.setVelY(0);
@@ -193,6 +206,39 @@ public class Game extends Canvas implements Runnable {
 		public void actionPerformed(ActionEvent e) {
 			pause = false;
 			clock.stop();
+		}
+	};
+
+	ActionListener gameTimeListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (game1) {
+				game1 = false;
+				game2 = true;
+				
+				// Remove Game 1 Objects
+				handler.removeGame1();
+				
+				// Game 2 Objects
+				handler.addObject(factory);
+
+			} else if (game2) {
+				game2 = false;
+				game3 = true;
+				
+				// Remove Game 2 Objects
+				
+				// Game 3 Objects
+				
+			} else if (game3) {
+				game3 = false;
+				gameTime.stop();
+				
+			} else {
+				gameTime.stop();
+				
+			}
+			gameTime.restart();
 		}
 	};
 
