@@ -4,6 +4,7 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +22,7 @@ import object.Critter;
 import object.Habitat;
 import object.RofFactory;
 import object.WasteBin;
+import window.Camera;
 import window.Handler;
 import window.Window;
 
@@ -58,9 +60,13 @@ public class Game extends Canvas implements Runnable {
 	boolean game3 = false;
 	Timer gameTime;
 
+	// Camera
+	Camera cam;
+
 	private void init() {
 		// Default Objects
 		handler = new Handler(this);
+		cam = new Camera(0, 0, dm);
 		// 0 1 2 3 4
 		// Width, Height, Water Start Width, Water Bottom Height, Water Surface
 		// Height
@@ -88,7 +94,7 @@ public class Game extends Canvas implements Runnable {
 		this.addMouseListener(new MouseInput(handler, this));
 
 		// Game Timer
-		gameTime = new Timer(10000, gameTimeListener);
+		gameTime = new Timer(50000, gameTimeListener);
 		gameTime.start();
 	}
 
@@ -131,16 +137,16 @@ public class Game extends Canvas implements Runnable {
 				System.out.println("FPS: " + frames + " TICKS: " + updates);
 				frames = 0;
 				updates = 0;
-				if(game2){
-					if(trees<=3){
+				if (game2) {
+					if (trees <= 3) {
 						factory.prodT(handler, dm);
-						trees+=1;
+						trees += 1;
 					}
-					if(nRof<4){
-						factory.prodRof(handler,dm);
-						
-						nRof+=1;
-						
+					if (nRof < 4) {
+						factory.prodRof(handler, dm);
+
+						nRof += 1;
+
 					}
 				}
 			}
@@ -151,7 +157,11 @@ public class Game extends Canvas implements Runnable {
 
 	private void tick() {
 		handler.tick();
-
+		for (int i = 0; i < handler.object.size(); i++) {
+			if (handler.object.get(i).getId() == ObjectId.critter) {
+				cam.tick(handler.object.get(i));
+			}
+		}
 	}
 
 	private void render() {
@@ -162,12 +172,16 @@ public class Game extends Canvas implements Runnable {
 		}
 
 		Graphics g = bs.getDrawGraphics();
+		Graphics2D g2d = (Graphics2D) g;
+
 		// Draw here
 
 		g.setColor(Color.black);
 		g.fillRect(0, 0, getWidth(), getHeight());
 
+		g2d.translate(cam.getX(), cam.getY());
 		handler.render(g);
+		g2d.translate(-cam.getX(), -cam.getY());
 		//
 		g.dispose();
 		bs.show();
@@ -215,28 +229,28 @@ public class Game extends Canvas implements Runnable {
 			if (game1) {
 				game1 = false;
 				game2 = true;
-				
+
 				// Remove Game 1 Objects
 				handler.removeGame1();
-				
+
 				// Game 2 Objects
 				handler.addObject(factory);
 
 			} else if (game2) {
 				game2 = false;
 				game3 = true;
-				
+
 				// Remove Game 2 Objects
-				
+
 				// Game 3 Objects
-				
+
 			} else if (game3) {
 				game3 = false;
 				gameTime.stop();
-				
+
 			} else {
 				gameTime.stop();
-				
+
 			}
 			gameTime.restart();
 		}
